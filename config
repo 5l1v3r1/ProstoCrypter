@@ -1,0 +1,6 @@
+﻿<project outputDir="%path%" baseDir="%basedir%" xmlns="https://confuser.codeplex.net">
+  <rule pattern="true" preset="minimum" />
+  <module path="%stub%">
+    <rule pattern="true" preset="minimum" />
+  </module>
+</project>

